@@ -51,14 +51,11 @@ class RandomRotate90:
 
     When creating make sure that the provided RandomStates are consistent between raw and labeled datasets,
     otherwise the models won't converge.
-
-    IMPORTANT: assumes (length, width, height) axis order, and perform the rotation on the (length, width) dimensions.
     """
 
     def __init__(self, seed, **kwargs):
         self.seed = seed
         # always rotate around z-axis
-        self.axis = (0, 1)
 
     def __call__(self, m):
         np.random.seed(self.seed) 
@@ -67,4 +64,34 @@ class RandomRotate90:
         k = np.random.randint(0, 4)
         m = np.rot90(m, k, self.axis)
         return m
+    
+
+class RandomCrop:
+    """
+    Crop an array to be fit for the input of 3D-UNet. Image should be 3D (length, width, height).
+
+    When creating make sure that the provided RandomCrop are consistent between raw and labeled datasets,
+    otherwise the models won't converge.
+
+    The default shape of RandomCrop is set to be (128, 128, 64)
+    """
+
+    def __init__(self, seed, length=128, width=128, height=64):
+        self.seed = seed
+        self.length = length
+        self.width = width
+        self.height = height
+        # always rotate around z-axis
+        self.axis = (0, 1)
+
+    def __call__(self, m):
+        np.random.seed(self.seed) 
+        assert m.ndim == 3, 'Supports only 3D images'
+        shape = m.shape
+        x = np.random.randint(0, shape[0]-self.length)
+        y = np.random.randint(0, shape[1]-self.width)
+        z = np.random.randint(0, shape[2]-self.height)
+        # m = np.rot90(m, k, self.axis)
+
+        return m[x:x+self.length, y:y+self.width, z:z+self.height]
 
