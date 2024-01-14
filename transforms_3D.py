@@ -41,7 +41,6 @@ class RandomFlip:
         assert m.ndim == 3, 'Supports only 3D images'
         for axis in self.axes:
             if np.random.uniform() > self.axis_prob:
-                print(axis)
                 m = np.flip(m, axis)
         return m
 
@@ -66,7 +65,6 @@ class RandomRotate90:
         assert m.ndim == 3, 'Supports only 3D images'
 
         k = np.random.randint(0, 4)
-        print(k)
         m = np.rot90(m, k, self.axis)
         return m
 
