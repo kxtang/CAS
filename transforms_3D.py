@@ -55,6 +55,7 @@ class RandomRotate90:
 
     def __init__(self, seed, **kwargs):
         self.seed = seed
+        self.axis = (0, 1)
         # always rotate around z-axis
 
     def __call__(self, m):
